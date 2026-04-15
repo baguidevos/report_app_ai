@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Éditeur</title>
+  <link rel="stylesheet" href="styles/main.css">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="animate">
+  <div class="main-content">
+    <div class="content-container">
+      <header style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px;">
+      <button class="btn btn-outline" onclick="window.history.back()" style="padding: 10px;">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      <h1 style="font-size: 20px; margin-bottom: 0;">Nouveau Rapport</h1>
+    </header>
+
+    <div class="editor-container">
+      <div class="editor-toolbar">
+        <i class="fas fa-bold" style="color: var(--text-secondary); cursor: pointer;"></i>
+        <i class="fas fa-italic" style="color: var(--text-secondary); cursor: pointer;"></i>
+        <i class="fas fa-list-ul" style="color: var(--text-secondary); cursor: pointer;"></i>
+        <i class="fas fa-heading" style="color: var(--text-secondary); cursor: pointer;"></i>
+        <i class="fas fa-link" style="color: var(--text-secondary); cursor: pointer;"></i>
+        <i class="fas fa-image" style="color: var(--text-secondary); cursor: pointer;"></i>
+      </div>
+      
+      <textarea placeholder="Commencez à écrire ici..."></textarea>
+    </div>
+
+    <footer style="margin-top: 24px; display: flex; justify-content: space-between;">
+      <button class="btn btn-outline">Annuler</button>
+      <button class="btn btn-primary" onclick="alert('Rapport enregistré !')">Enregistrer</button>
+    </footer>
+    </div>
+  </div>
+</body>
+</html>

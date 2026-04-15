@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fusionner les Rapports</title>
+  <link rel="stylesheet" href="styles/main.css">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="animate">
+  <div class="main-content">
+    <div class="content-container">
+      <header style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px;">
+      <button class="btn btn-outline" onclick="window.history.back()" style="padding: 10px;">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      <h1 style="font-size: 20px; margin-bottom: 0;">Fusionner & Analyser</h1>
+    </header>
+
+    <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 20px;">Sélectionnez les rapports à jumeler pour une analyse globalisée.</p>
+
+    <div id="selectionList" class="reports-grid">
+      <div class="report-card" onclick="toggleSelect(this)">
+        <div class="report-info">
+          <span class="title">Rapport Hebdo #14</span>
+          <span class="meta">07/04 - 13/04</span>
+        </div>
+        <i class="far fa-circle" style="color: var(--accent-color);"></i>
+      </div>
+
+      <div class="report-card" onclick="toggleSelect(this)">
+        <div class="report-info">
+          <span class="title">Rapport Hebdo #13</span>
+          <span class="meta">31/03 - 06/04</span>
+        </div>
+        <i class="far fa-circle" style="color: var(--accent-color);"></i>
+      </div>
+
+      <div class="report-card" onclick="toggleSelect(this)">
+        <div class="report-info">
+          <span class="title">Rapport Hebdo #12</span>
+          <span class="meta">24/03 - 30/03</span>
+        </div>
+        <i class="far fa-circle" style="color: var(--accent-color);"></i>
+      </div>
+      
+      <div class="report-card" onclick="toggleSelect(this)">
+        <div class="report-info">
+          <span class="title">Rapport Hebdo #11</span>
+          <span class="meta">17/03 - 23/04</span>
+        </div>
+        <i class="far fa-circle" style="color: var(--accent-color);"></i>
+      </div>
+    </div>
+
+    <div style="margin-top: 32px; text-align: center;" id="actionArea">
+      <button class="btn btn-primary" style="width: 100%; justify-content: center;" onclick="runAnalysis()">
+        <i class="fas fa-wand-magic-sparkles"></i> Fusionner avec Agent IA
+      </button>
+    </div>
+
+    <div id="aiPanel" class="ai-panel">
+      <div id="aiLoader">
+        <div class="ai-loader">
+          <div class="pulse"></div>
+          <span>L'Agent "Synthèse Executive" analyse vos rapports...</span>
+        </div>
+      </div>
+      
+      <div id="aiResult" style="display: none; margin-top: 16px;">
+        <h3 style="font-size: 16px; margin-bottom: 12px; color: var(--primary-color);">Résumé de l'Agent IA</h3>
+        <p style="font-size: 14px; color: var(--text-primary); text-align: justify;">
+          Après analyse des 3 rapports hebdomadaires fusionnés, les tendances principales montrent une montée en puissance sur le volet développement (+15%) mais un ralentissement sur la documentation. L'agent suggère de prioriser la mise à jour des guides API la semaine prochaine.
+        </p>
+        <div style="margin-top: 20px; display: flex; gap: 10px;">
+          <button class="btn btn-primary" style="font-size: 12px; flex: 1;" onclick="alert('Exportation PDF lancée')">Exporter PDF</button>
+          <button class="btn btn-outline" style="font-size: 12px; flex: 1;" onclick="window.location.reload()">Réinitialiser</button>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+
+  <script>
+    function toggleSelect(el) {
+      el.classList.toggle('selected');
+      const icon = el.querySelector('i');
+      if (el.classList.contains('selected')) {
+        icon.classList.replace('far', 'fas');
+        icon.classList.replace('fa-circle', 'fa-check-circle');
+        icon.style.color = '#a8a29e';
+      } else {
+        icon.classList.replace('fas', 'far');
+        icon.classList.replace('fa-check-circle', 'fa-circle');
+        icon.style.color = '#d6d3d1';
+      }
+    }
+
+    function runAnalysis() {
+      const activePanel = document.getElementById('aiPanel');
+      activePanel.classList.add('active');
+      document.getElementById('actionArea').style.display = 'none';
+      
+      setTimeout(() => {
+        document.getElementById('aiLoader').style.display = 'none';
+        document.getElementById('aiResult').style.display = 'block';
+      }, 3000);
+    }
+  </script>
+</body>
+</html>

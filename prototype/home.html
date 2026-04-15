@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tableau de bord</title>
+  <link rel="stylesheet" href="styles/main.css">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="animate">
+  <div class="content-wrapper">
+    <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;">
+      <div>
+        <h1 style="font-size: 24px; margin-bottom: 4px;">Rapports</h1>
+        <p style="color: var(--text-secondary); font-size: 14px;">Bienvenue, Jean</p>
+      </div>
+      <button class="btn btn-primary" onclick="window.location.href='editor.html'">
+        <i class="fas fa-plus"></i>
+      </button>
+    </header>
+
+    <div class="search-bar" style="margin-bottom: 24px;">
+      <div style="background: var(--card-bg); padding: 12px 16px; border-radius: 12px; display: flex; align-items: center; border: 1px solid var(--accent-color);">
+        <i class="fas fa-search" style="color: var(--text-secondary); margin-right: 12px;"></i>
+        <input type="text" placeholder="Rechercher un rapport..." style="border: none; background: transparent; outline: none; width: 100%; font-size: 14px;">
+      </div>
+    </div>
+
+    <h2 style="font-size: 16px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-secondary); margin-bottom: 24px;">Rapports Récents</h2>
+
+    <div class="reports-grid">
+      <div class="report-card" onclick="window.location.href='editor.html'">
+        <div class="report-info">
+          <span class="title">Rapport Hebdo #14</span>
+          <span class="meta">Il y a 2 heures • 1,200 mots</span>
+        </div>
+        <span class="tag">Hebdomadaire</span>
+      </div>
+
+      <div class="report-card" onclick="window.location.href='editor.html'">
+        <div class="report-info">
+          <span class="title">Notes de réunion du 12/04</span>
+          <span class="meta">Hier • 450 mots</span>
+        </div>
+        <span class="tag">Quotidien</span>
+      </div>
+
+      <div class="report-card" onclick="window.location.href='editor.html'">
+        <div class="report-info">
+          <span class="title">Bilan Mars 2026</span>
+          <span class="meta">4 jours • 3,500 mots</span>
+        </div>
+        <span class="tag">Mensuel</span>
+      </div>
+
+      <div class="report-card" onclick="window.location.href='editor.html'">
+        <div class="report-info">
+          <span class="title">Rapport Hebdo #13</span>
+          <span class="meta">1 semaine • 1,100 mots</span>
+        </div>
+        <span class="tag">Hebdomadaire</span>
+      </div>
+      
+      <div class="report-card" onclick="window.location.href='editor.html'">
+        <div class="report-info">
+          <span class="title">Journal de Bord - Semaine 12</span>
+          <span class="meta">2 semaines • 980 mots</span>
+        </div>
+        <span class="tag">Hebdomadaire</span>
+      </div>
+      
+      <div class="report-card" onclick="window.location.href='editor.html'">
+        <div class="report-info">
+          <span class="title">Révision Trimestrielle Q1</span>
+          <span class="meta">3 semaines • 5,200 mots</span>
+        </div>
+        <span class="tag">Semestriel</span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
