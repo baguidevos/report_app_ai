@@ -4,19 +4,29 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\MergeController;
 use App\Http\Controllers\AgentController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-// Landing page - redirect authenticated users to reports
+// Landing page - redirect authenticated users to dashboard
 Route::get('/', function () {
-    if (auth()->check()) {
-        return redirect()->route('reports.index');
+    if (Auth::check()) {
+        return redirect()->route('dashboard');
     }
     return view('welcome');
 })->name('home');
 
-// Dashboard redirects to reports for authenticated users
+// Dashboard with stats
 Route::get('/dashboard', function () {
-    return redirect()->route('reports.index');
+    $user = Auth::user();
+    
+    $totalReports = $user->reports()->count();
+    $dailyReports = $user->reports()->where('frequency', 'daily')->count();
+    $weeklyReports = $user->reports()->where('frequency', 'weekly')->count();
+    $monthlyReports = $user->reports()->where('frequency', 'monthly')->count();
+    $recentReports = $user->reports()->latest()->take(6)->get();
+    
+    
+    return view('dashboard', compact('totalReports', 'dailyReports', 'weeklyReports', 'monthlyReports', 'recentReports'));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -26,8 +36,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     
     // Reports CRUD
-    Route::resource('reports', ReportController::class);
     Route::get('reports/merge', [ReportController::class, 'merge'])->name('reports.merge.form');
+    
+    Route::resource('reports', ReportController::class);
 
     // Merge reports
     Route::post('reports/merge', [MergeController::class, 'store'])->name('reports.merge');

@@ -13,7 +13,7 @@
             const executeAgentBtn = document.getElementById('execute-agent-btn');
             const agentSelect = document.getElementById('agent-select');
             const statusDiv = document.getElementById('agent-status');
-            
+
             if (executeAgentBtn && agentSelect) {
                 executeAgentBtn.addEventListener('click', async function() {
                     const agentId = agentSelect.value;
@@ -21,13 +21,13 @@
                         alert('Veuillez sélectionner un agent');
                         return;
                     }
-                    
+
                     // Show loading state
                     executeAgentBtn.disabled = true;
-                    executeAgentBtn.innerHTML = '<svg class="animate-spin h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Traitement...';
+                    executeAgentBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Traitement...';
                     statusDiv.classList.remove('hidden');
-                    statusDiv.innerHTML = '<p class="text-sm text-blue-600">Traitement en cours...</p>';
-                    
+                    statusDiv.innerHTML = '<p class="text-sm text-primary"><div class="inline-block w-3 h-3 bg-primary rounded-full animate-pulse-dot mr-2"></div>Traitement en cours...</p>';
+
                     try {
                         const response = await fetch(`/agents/${agentId}/execute`, {
                             method: 'POST',
@@ -37,12 +37,12 @@
                             },
                             body: JSON.stringify({ report_id: {{ $report->id }} })
                         });
-                        
+
                         const data = await response.json();
-                        
+
                         if (data.success) {
-                            statusDiv.innerHTML = '<p class="text-sm text-green-600">✓ Traitement terminé! Rechargez la page pour voir le nouveau rapport.</p>';
-                            
+                            statusDiv.innerHTML = '<p class="text-sm text-green-600"><i class="fas fa-check-circle mr-1"></i> Traitement terminé! Rechargez la page pour voir le nouveau rapport.</p>';
+
                             // Reload after 3 seconds
                             setTimeout(() => {
                                 window.location.reload();
@@ -54,7 +54,7 @@
                         statusDiv.innerHTML = '<p class="text-sm text-red-600">Erreur de connexion</p>';
                     } finally {
                         executeAgentBtn.disabled = false;
-                        executeAgentBtn.innerHTML = 'Exécuter l\'Agent';
+                        executeAgentBtn.innerHTML = '<i class="fas fa-magic mr-2"></i> Exécuter l\'Agent';
                     }
                 });
             }
@@ -63,33 +63,33 @@
 @endpush
 
 @section('content')
-<div class="max-w-5xl mx-auto">
+<div class="space-y-6 animate-fade-in">
     <!-- Header -->
-    <div class="mb-6">
-        <a href="{{ route('reports.index') }}" class="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center space-x-1 mb-4">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-            </svg>
-            <span>Retour aux rapports</span>
+    <div class="flex items-center gap-4 mb-6">
+        <a href="{{ route('reports.index') }}" 
+           class="inline-flex items-center px-3 py-2 glass-effect border border-accent text-text-primary rounded-card hover:bg-accent/20 transition-smooth">
+            <i class="fas fa-chevron-left"></i>
         </a>
-        <h1 class="text-3xl font-bold text-gray-900">Modifier le Rapport</h1>
-        <p class="text-gray-600 mt-1">Dernière modification: {{ $report->updated_at->format('d/m/Y H:i') }}</p>
+        <div>
+            <h1 class="text-xl font-semibold text-text-primary">Modifier le Rapport</h1>
+            <p class="text-sm text-text-secondary mt-1">Dernière modification: {{ $report->updated_at->format('d/m/Y H:i') }}</p>
+        </div>
     </div>
 
     <!-- Form -->
-    <form action="{{ route('reports.update', $report) }}" method="POST" class="glass rounded-xl p-6 shadow-sm space-y-6">
+    <form action="{{ route('reports.update', $report) }}" method="POST" class="space-y-6">
         @csrf
         @method('PUT')
 
         <!-- Title -->
         <div>
-            <label for="title" class="block text-sm font-medium text-gray-700 mb-2">Titre du rapport</label>
-            <input type="text" 
-                   name="title" 
-                   id="title" 
+            <label for="title" class="block text-sm font-medium text-text-secondary mb-2">Titre du rapport</label>
+            <input type="text"
+                   name="title"
+                   id="title"
                    required
                    value="{{ old('title', $report->title) }}"
-                   class="w-full border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500 @error('title') border-red-500 @enderror"
+                   class="w-full px-4 py-3 glass-effect border border-accent rounded-card shadow-sm focus:border-primary focus:ring-primary bg-white @error('title') border-red-500 @enderror"
                    placeholder="Ex: Rapport quotidien - 15 Avril 2026">
             @error('title')
                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -98,11 +98,11 @@
 
         <!-- Frequency -->
         <div>
-            <label for="frequency" class="block text-sm font-medium text-gray-700 mb-2">Fréquence</label>
-            <select name="frequency" 
-                    id="frequency" 
+            <label for="frequency" class="block text-sm font-medium text-text-secondary mb-2">Fréquence</label>
+            <select name="frequency"
+                    id="frequency"
                     required
-                    class="w-full border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500 @error('frequency') border-red-500 @enderror">
+                    class="w-full px-4 py-3 glass-effect border border-accent rounded-card shadow-sm focus:border-primary focus:ring-primary bg-white @error('frequency') border-red-500 @enderror">
                 <option value="">Sélectionnez une fréquence</option>
                 <option value="daily" {{ old('frequency', $report->frequency) == 'daily' ? 'selected' : '' }}>Quotidien</option>
                 <option value="weekly" {{ old('frequency', $report->frequency) == 'weekly' ? 'selected' : '' }}>Hebdomadaire</option>
@@ -114,52 +114,65 @@
         </div>
 
         <!-- AI Agent Section -->
-        <div class="border-t border-gray-200 pt-6">
-            <h2 class="text-lg font-semibold text-gray-900 mb-4">Agents IA</h2>
-            <p class="text-sm text-gray-600 mb-4">Utilisez un agent IA pour transformer votre rapport</p>
-            
+        <div class="glass-effect rounded-card p-6 border border-accent">
+            <h2 class="text-lg font-semibold text-text-primary mb-2">Agents IA</h2>
+            <p class="text-sm text-text-secondary mb-4">Utilisez un agent IA pour transformer votre rapport</p>
+
             <div class="flex items-end space-x-3">
                 <div class="flex-1">
-                    <label for="agent-select" class="block text-sm font-medium text-gray-700 mb-2">Sélectionner un agent</label>
-                    <select id="agent-select" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    <label for="agent-select" class="block text-sm font-medium text-text-secondary mb-2">Sélectionner un agent</label>
+                    <select id="agent-select" class="w-full px-4 py-3 glass-effect border border-accent rounded-card shadow-sm focus:border-primary focus:ring-primary bg-white">
                         <option value="">Choisissez un agent...</option>
                         @foreach(\App\Models\Agent::getDefaultAgents() as $agent)
                             <option value="{{ $agent->id }}">{{ $agent->name }}</option>
                         @endforeach
                     </select>
                 </div>
-                <button type="button" 
+                <button type="button"
                         id="execute-agent-btn"
-                        class="px-6 py-2.5 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:shadow-lg transition-smooth font-medium whitespace-nowrap">
-                    Exécuter l'Agent
+                        class="inline-flex items-center px-6 py-3 bg-primary text-white rounded-card font-medium btn-primary-hover transition-smooth whitespace-nowrap">
+                    <i class="fas fa-magic mr-2"></i> Exécuter l'Agent
                 </button>
             </div>
-            
+
             <div id="agent-status" class="mt-3 hidden"></div>
         </div>
 
-        <!-- Content (Markdown Editor) -->
-        <div class="border-t border-gray-200 pt-6">
-            <label for="content" class="block text-sm font-medium text-gray-700 mb-2">Contenu</label>
-            <textarea name="content" 
-                      id="content" 
-                      required
-                      rows="20"
-                      class="w-full @error('content') border-red-500 @enderror">{{ old('content', $report->content) }}</textarea>
+        <!-- Editor Toolbar -->
+        <div>
+            <label for="content" class="block text-sm font-medium text-text-secondary mb-2">Contenu</label>
+            <div class="glass-effect rounded-card border border-accent overflow-hidden">
+                <!-- Toolbar -->
+                <div class="px-4 py-3 border-b border-accent flex gap-4">
+                    <i class="fas fa-bold text-text-secondary cursor-pointer hover:text-text-primary transition-smooth"></i>
+                    <i class="fas fa-italic text-text-secondary cursor-pointer hover:text-text-primary transition-smooth"></i>
+                    <i class="fas fa-list-ul text-text-secondary cursor-pointer hover:text-text-primary transition-smooth"></i>
+                    <i class="fas fa-heading text-text-secondary cursor-pointer hover:text-text-primary transition-smooth"></i>
+                    <i class="fas fa-link text-text-secondary cursor-pointer hover:text-text-primary transition-smooth"></i>
+                    <i class="fas fa-image text-text-secondary cursor-pointer hover:text-text-primary transition-smooth"></i>
+                </div>
+
+                <!-- Textarea -->
+                <textarea name="content"
+                          id="content"
+                          required
+                          rows="20"
+                          class="w-full px-6 py-4 bg-transparent border-none outline-none resize-none text-text-primary @error('content') border-red-500 @enderror">{{ old('content', $report->content) }}</textarea>
+            </div>
             @error('content')
                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
             @enderror
         </div>
 
         <!-- Actions -->
-        <div class="flex justify-end space-x-3 pt-4 border-t border-gray-200">
-            <a href="{{ route('reports.index') }}" class="px-6 py-2.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-smooth font-medium">
+        <div class="flex justify-between items-center pt-6 border-t border-accent">
+            <a href="{{ route('reports.index') }}" 
+               class="inline-flex items-center px-6 py-3 glass-effect border border-accent text-text-primary rounded-card font-medium hover:bg-accent/20 transition-smooth">
                 Annuler
             </a>
-            <button type="submit" class="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:shadow-lg transition-smooth font-medium">
-                <svg class="inline-block w-5 h-5 mr-2 -ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                </svg>
+            <button type="submit" 
+                    class="inline-flex items-center px-6 py-3 bg-primary text-white rounded-card font-medium btn-primary-hover transition-smooth">
+                <i class="fas fa-check mr-2"></i>
                 Mettre à Jour
             </button>
         </div>
@@ -167,24 +180,25 @@
 
     @if($report->isMaster())
     <!-- Master Report Info -->
-    <div class="mt-6 glass rounded-xl p-6 shadow-sm">
-        <h2 class="text-lg font-semibold text-gray-900 mb-3">Rapports Sources</h2>
-        <p class="text-sm text-gray-600 mb-4">Ce rapport maître a été généré à partir de {{ $report->children->count() }} rapport(s) source(s).</p>
-        
-        <div class="space-y-2">
+    <div class="glass-effect rounded-card p-6 border border-accent">
+        <h2 class="text-lg font-semibold text-text-primary mb-3">Rapports Sources</h2>
+        <p class="text-sm text-text-secondary mb-4">Ce rapport maître a été généré à partir de {{ $report->children->count() }} rapport(s) source(s).</p>
+
+        <div class="space-y-3">
             @foreach($report->getChildren() as $child)
-                <div class="flex items-center justify-between p-3 bg-white rounded-lg border border-gray-200">
+                <div class="flex items-center justify-between p-4 glass-effect rounded-card border border-accent">
                     <div>
-                        <p class="text-sm font-medium text-gray-900">{{ $child->title }}</p>
-                        <p class="text-xs text-gray-500">{{ $child->created_at->format('d/m/Y H:i') }}</p>
+                        <p class="text-sm font-medium text-text-primary">{{ $child->title }}</p>
+                        <p class="text-xs text-text-secondary">{{ $child->created_at->format('d/m/Y H:i') }}</p>
                     </div>
-                    <span class="px-2 py-1 text-xs font-semibold rounded-full 
-                        {{ $child->frequency === 'daily' ? 'bg-blue-100 text-blue-800' : '' }}
-                        {{ $child->frequency === 'weekly' ? 'bg-green-100 text-green-800' : '' }}
-                        {{ $child->frequency === 'monthly' ? 'bg-purple-100 text-purple-800' : '' }}">
-                        {{ $child->frequency === 'daily' ? 'Quotidien' : '' }}
-                        {{ $child->frequency === 'weekly' ? 'Hebdomadaire' : '' }}
-                        {{ $child->frequency === 'monthly' ? 'Mensuel' : '' }}
+                    <span class="text-xs px-3 py-1 rounded-full bg-accent text-text-primary">
+                        @if($child->frequency === 'daily')
+                            Quotidien
+                        @elseif($child->frequency === 'weekly')
+                            Hebdomadaire
+                        @elseif($child->frequency === 'monthly')
+                            Mensuel
+                        @endif
                     </span>
                 </div>
             @endforeach

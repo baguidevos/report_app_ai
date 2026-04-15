@@ -12,7 +12,36 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                sans: ['Outfit', ...defaultTheme.fontFamily.sans],
+            },
+            colors: {
+                // Morandi Color Palette
+                primary: {
+                    DEFAULT: '#a8a29e',
+                    hover: '#78716c',
+                    light: '#d6d3d1',
+                },
+                cream: {
+                    DEFAULT: '#F8F5F0',
+                    dark: '#F5F0E8',
+                },
+                text: {
+                    primary: '#44403c',
+                    secondary: '#78716c',
+                },
+                accent: {
+                    DEFAULT: '#d6d3d1',
+                    light: '#e7e5e4',
+                },
+            },
+            borderRadius: {
+                'card': '16px',
+            },
+            backdropBlur: {
+                'glass': '12px',
+            },
+            transitionTimingFunction: {
+                'smooth': 'cubic-bezier(0.4, 0, 0.2, 1)',
             },
         },
     },

@@ -6,6 +6,7 @@ use App\Models\Report;
 use App\Services\ReportMergeService;
 use App\Http\Requests\MergeReportsRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class MergeController extends Controller
 {
@@ -25,7 +26,7 @@ class MergeController extends Controller
             $masterReport = $this->mergeService->merge(
                 $request->report_ids,
                 $request->frequency,
-                auth()->id()
+                Auth::id()
             );
 
             return redirect()->route('reports.edit', $masterReport)

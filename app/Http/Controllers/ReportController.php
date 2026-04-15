@@ -6,6 +6,7 @@ use App\Models\Report;
 use App\Http\Requests\StoreReportRequest;
 use App\Http\Requests\UpdateReportRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ReportController extends Controller
 {
@@ -15,7 +16,7 @@ class ReportController extends Controller
     public function index(Request $request)
     {
         $query = Report::with(['parent', 'children'])
-            ->where('user_id', auth()->id())
+            ->where('user_id', Auth::id())
             ->orderBy('created_at', 'desc');
 
         // Filter by frequency if provided
@@ -41,7 +42,7 @@ class ReportController extends Controller
      */
     public function merge(Request $request)
     {
-        $query = Report::where('user_id', auth()->id())
+        $query = Report::where('user_id', Auth::id())
             ->whereNull('parent_report_id') // Only show reports that aren't already children
             ->orderBy('created_at', 'desc');
 
@@ -60,8 +61,9 @@ class ReportController extends Controller
      */
     public function store(StoreReportRequest $request)
     {
+
         $report = Report::create([
-            'user_id' => auth()->id(),
+            'user_id' => Auth::id(),
             'title' => $request->input('title'),
             'content' => $request->input('content'),
             'frequency' => $request->input('frequency'),
@@ -77,7 +79,7 @@ class ReportController extends Controller
     public function show(Report $report)
     {
         // Check authorization
-        if ($report->user_id !== auth()->id()) {
+        if ($report->user_id !== Auth::id()) {
             abort(403);
         }
 
@@ -90,7 +92,7 @@ class ReportController extends Controller
     public function edit(Report $report)
     {
         // Check authorization
-        if ($report->user_id !== auth()->id()) {
+        if ($report->user_id !== Auth::id()) {
             abort(403);
         }
 
@@ -103,7 +105,7 @@ class ReportController extends Controller
     public function update(UpdateReportRequest $request, Report $report)
     {
         // Check authorization
-        if ($report->user_id !== auth()->id()) {
+        if ($report->user_id !== Auth::id()) {
             abort(403);
         }
 
@@ -118,8 +120,9 @@ class ReportController extends Controller
      */
     public function destroy(Report $report)
     {
+
         // Check authorization
-        if ($report->user_id !== auth()->id()) {
+        if ($report->user_id !== Auth::id()) {
             abort(403);
         }
 

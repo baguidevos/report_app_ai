@@ -1,3 +1,134 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Layout styles from prototype - FIXED */
+.main-wrapper {
+    display: flex;
+    min-height: 100vh;
+    position: relative;
+}
+
+.sidebar {
+    width: 260px;
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(12px);
+    border-right: 1px solid #d6d3d1;
+    padding: 24px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    overflow-y: auto;
+    z-index: 50;
+}
+
+.main-content {
+    flex: 1;
+    margin-left: 260px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.content-container {
+    flex: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px 32px;
+    width: 100%;
+}
+
+/* Custom animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 0.4;
+    }
+    50% {
+        opacity: 1;
+    }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.5s ease forwards;
+}
+
+.animate-pulse-dot {
+    animation: pulse 1.5s infinite;
+}
+
+/* Glass effect utility */
+.glass-effect {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Card hover effect */
+.card-hover {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-hover:hover {
+    transform: scale(1.02);
+    background: white;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+/* Button hover effect */
+.btn-primary-hover:hover {
+    background-color: #44403c;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Report card selected state */
+.report-card.selected {
+    border: 2px solid #a8a29e;
+    background: rgba(168, 162, 158, 0.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    .sidebar {
+        width: 220px;
+        padding: 32px 20px;
+    }
+    
+    .content-container {
+        padding: 32px 24px;
+    }
+}
+
+@media (max-width: 768px) {
+    .main-wrapper {
+        flex-direction: column;
+    }
+    
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        padding: 24px 20px;
+        border-right: none;
+        border-bottom: 1px solid #d6d3d1;
+    }
+    
+    .content-container {
+        padding: 24px 16px;
+    }
+}

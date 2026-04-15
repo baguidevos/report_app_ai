@@ -20,7 +20,7 @@ class ReportMergeService
         // Fetch all reports with ordering preserved
         $reports = Report::whereIn('id', $reportIds)
             ->where('user_id', $userId)
-            ->orderByRaw('FIELD(id, ' . implode(',', $reportIds) . ')')
+            ->orderBy('id', 'asc')
             ->get();
 
         if ($reports->count() < 2) {

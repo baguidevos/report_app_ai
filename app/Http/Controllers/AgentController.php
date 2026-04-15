@@ -6,6 +6,7 @@ use App\Models\Agent;
 use App\Models\Report;
 use App\Jobs\ProcessAIAgentJob;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 
 class AgentController extends Controller
@@ -22,12 +23,12 @@ class AgentController extends Controller
         $report = Report::findOrFail($request->report_id);
 
         // Check authorization
-        if ($report->user_id !== auth()->id()) {
+        if ($report->user_id !== Auth::id()) {
             abort(403);
         }
 
         // Dispatch the job
-        ProcessAIAgentJob::dispatch($agent->id, $report->id, auth()->id());
+        ProcessAIAgentJob::dispatch($agent->id, $report->id, Auth::id());
 
         return response()->json([
             'success' => true,
@@ -42,7 +43,7 @@ class AgentController extends Controller
     {
         // For simplicity, we're using cache to track the latest job status per user
         // In production, you'd use Laravel's job batching or a proper job tracking system
-        $status = Cache::get("agent_job_" . auth()->id() . "_latest");
+        $status = Cache::get("agent_job_" . Auth::id() . "_latest");
 
         if (!$status) {
             return response()->json([
