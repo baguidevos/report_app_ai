@@ -73,4 +73,12 @@ class Report extends Model
     {
         return $this->children()->orderBy('created_at', 'asc')->get();
     }
+
+    /**
+     * Get the AI summaries for this report.
+     */
+    public function aiSummaries(): HasMany
+    {
+        return $this->hasMany(AiReportSummerize::class);
+    }
 }

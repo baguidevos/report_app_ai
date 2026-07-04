@@ -7,59 +7,7 @@
     <script>
         window.reportId = '{{ $report->id }}';
     </script>
-    <script>
-        // Agent execution functionality
-        document.addEventListener('DOMContentLoaded', function() {
-            const executeAgentBtn = document.getElementById('execute-agent-btn');
-            const agentSelect = document.getElementById('agent-select');
-            const statusDiv = document.getElementById('agent-status');
 
-            if (executeAgentBtn && agentSelect) {
-                executeAgentBtn.addEventListener('click', async function() {
-                    const agentId = agentSelect.value;
-                    if (!agentId) {
-                        alert('Veuillez sélectionner un agent');
-                        return;
-                    }
-
-                    // Show loading state
-                    executeAgentBtn.disabled = true;
-                    executeAgentBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Traitement...';
-                    statusDiv.classList.remove('hidden');
-                    statusDiv.innerHTML = '<p class="text-sm text-primary"><div class="inline-block w-3 h-3 bg-primary rounded-full animate-pulse-dot mr-2"></div>Traitement en cours...</p>';
-
-                    try {
-                        const response = await fetch(`/agents/${agentId}/execute`, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                            },
-                            body: JSON.stringify({ report_id: {{ $report->id }} })
-                        });
-
-                        const data = await response.json();
-
-                        if (data.success) {
-                            statusDiv.innerHTML = '<p class="text-sm text-green-600"><i class="fas fa-check-circle mr-1"></i> Traitement terminé! Rechargez la page pour voir le nouveau rapport.</p>';
-
-                            // Reload after 3 seconds
-                            setTimeout(() => {
-                                window.location.reload();
-                            }, 3000);
-                        } else {
-                            statusDiv.innerHTML = '<p class="text-sm text-red-600">Erreur: ' + data.message + '</p>';
-                        }
-                    } catch (error) {
-                        statusDiv.innerHTML = '<p class="text-sm text-red-600">Erreur de connexion</p>';
-                    } finally {
-                        executeAgentBtn.disabled = false;
-                        executeAgentBtn.innerHTML = '<i class="fas fa-magic mr-2"></i> Exécuter l\'Agent';
-                    }
-                });
-            }
-        });
-    </script>
 @endpush
 
 @section('content')
@@ -113,29 +61,44 @@
             @enderror
         </div>
 
-        <!-- AI Agent Section -->
+        <!-- AI Summary Section -->
         <div class="glass-effect rounded-card p-6 border border-accent">
-            <h2 class="text-lg font-semibold text-text-primary mb-2">Agents IA</h2>
-            <p class="text-sm text-text-secondary mb-4">Utilisez un agent IA pour transformer votre rapport</p>
-
-            <div class="flex items-end space-x-3">
-                <div class="flex-1">
-                    <label for="agent-select" class="block text-sm font-medium text-text-secondary mb-2">Sélectionner un agent</label>
-                    <select id="agent-select" class="w-full px-4 py-3 glass-effect border border-accent rounded-card shadow-sm focus:border-primary focus:ring-primary bg-white">
-                        <option value="">Choisissez un agent...</option>
-                        @foreach(\App\Models\Agent::getDefaultAgents() as $agent)
-                            <option value="{{ $agent->id }}">{{ $agent->name }}</option>
-                        @endforeach
-                    </select>
+            <div class="flex items-center justify-between mb-4">
+                <div>
+                    <h2 class="text-lg font-semibold text-text-primary">Résumé par IA</h2>
+                    <p class="text-sm text-text-secondary">Générez une synthèse intelligente de votre rapport</p>
                 </div>
-                <button type="button"
-                        id="execute-agent-btn"
-                        class="inline-flex items-center px-6 py-3 bg-primary text-white rounded-card font-medium btn-primary-hover transition-smooth whitespace-nowrap">
-                    <i class="fas fa-magic mr-2"></i> Exécuter l'Agent
+                <button type="submit"
+                        form="summarize-form"
+                        id="summarize-report-btn"
+                        class="inline-flex items-center px-6 py-3 bg-secondary  rounded-card font-medium btn-secondary-hover transition-smooth shadow-lg shadow-secondary/20">
+                    <i class="fas fa-robot mr-2"></i> Résumer par IA
                 </button>
             </div>
 
-            <div id="agent-status" class="mt-3 hidden"></div>
+            @if(session('success'))
+                <div class="mb-4 p-3 bg-green-50/50 border border-green-200 text-green-600 rounded-card text-sm">
+                    <i class="fas fa-check-circle mr-1"></i> {{ session('success') }}
+                </div>
+            @endif
+            @if(session('error'))
+                <div class="mb-4 p-3 bg-red-50/50 border border-red-200 text-red-600 rounded-card text-sm">
+                    <i class="fas fa-exclamation-circle mr-1"></i> {{ session('error') }}
+                </div>
+            @endif
+
+            <div id="ai-summary-container" class="{{ $report->aiSummaries->isEmpty() ? 'hidden' : '' }}">
+                <div class="p-5 glass-effect rounded-card border border-primary/20 bg-primary/5">
+                    @php
+                        $latestSummary = $report->aiSummaries->last();
+                    @endphp
+                    <div id="ai-summary-content" class="prose prose-slate max-w-none text-text-primary text-sm leading-relaxed">
+                        @if($latestSummary)
+                            {!! Str::markdown($latestSummary->body) !!}
+                        @endif
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Editor Toolbar -->
@@ -206,4 +169,8 @@
     </div>
     @endif
 </div>
+
+<form id="summarize-form" action="{{ route('reports.summarize', $report) }}" method="POST" class="hidden">
+    @csrf
+</form>
 @endsection

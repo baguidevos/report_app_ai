@@ -1,11 +1,14 @@
 <?php
 
+use App\Ai\Agents\ReportSummarizer;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\MergeController;
 use App\Http\Controllers\AgentController;
+use App\Models\Report;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Laravel\Ai\Enums\Lab;
 
 // Landing page - redirect authenticated users to dashboard
 Route::get('/', function () {
@@ -46,6 +49,9 @@ Route::middleware('auth')->group(function () {
     // Agent execution
     Route::post('agents/{agent}/execute', [AgentController::class, 'execute'])->name('agents.execute');
     Route::get('agents/job/{jobId}/status', [AgentController::class, 'status'])->name('agents.status');
+
+    // AI Summary
+    Route::post('reports/{report}/summarize', [\App\Http\Controllers\AiReportSummerizeController::class, 'summarize'])->name('reports.summarize');
 });
 
 require __DIR__.'/auth.php';
